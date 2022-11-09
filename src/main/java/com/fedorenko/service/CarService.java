@@ -7,7 +7,7 @@ import java.util.Random;
 public class CarService {
         static String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-    public static Car create() {
+    public Car create() {
         String manufacturer = randomString();
         String  engine = randomString();
         String  color = randomString();
