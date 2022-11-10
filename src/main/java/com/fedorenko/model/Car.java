@@ -7,11 +7,28 @@ public class Car {
     private Color  color;
     private final String id;
 
+    private Engine engine;
+
+    private int count;
 
     public Car(Color color) {
+        count = 1;
         this.color = color;
         this.id = UUID.randomUUID().toString();
     }
+    public Car(Color color, Engine engine) {
+        count = 1;
+        this.color = color;
+        this.engine = engine;
+        this.id = UUID.randomUUID().toString();
+    }
+    public Engine getEngine() {
+        return engine;
+    }
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
     public String getId() {
         return id;
     }
@@ -22,6 +39,14 @@ public class Car {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     @Override

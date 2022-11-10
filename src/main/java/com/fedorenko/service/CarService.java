@@ -43,6 +43,9 @@ public class CarService {
         }
         carArrayRepository.delete(id);
     }
+    public void insertCar(final int index, final Car car) {
+        carArrayRepository.insert(index, car);
+    }
 
     private String randomString() {
         String str = "";
@@ -59,9 +62,21 @@ public class CarService {
         }
         return str;
     }
+    public static void check(final Car car) {
+        if (car.getCount() > 0 && car.getEngine().getPower() > 200) {
+            System.out.println("Ready to sell");
+        } else if (car.getCount() > 0) {
+            System.out.println("Power of engine is not enough");
+        } else if (car.getEngine().getPower() > 200) {
+            System.out.println("The amount of cars is 0");
+        } else {
+            System.out.println("Power of engine is not enough and amount of cars is 0");
+        }
+    }
     public void printAll() {
         final Car[] all = carArrayRepository.getAll();
         System.out.println(Arrays.toString(all));
+        System.out.println();
     }
 
     private Color getRandomColor() {

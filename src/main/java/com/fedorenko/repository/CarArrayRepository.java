@@ -40,10 +40,30 @@ public class CarArrayRepository {
                 break;
             }
         }
+
         if (index != cars.length) {
             System.arraycopy(cars, index + 1, cars, index, cars.length - (index + 1));
         }
     }
+    public void insert(int index, final Car car) {
+        if(cars[index] == null) {
+            int i = index;
+            for (; i >= 0; i--) {
+                if (cars[i] != null) {
+                    cars[++i] = car;
+                    return;
+                }
+            }
+        } else if (cars[cars.length - 1] != null) {
+            increaseArray();
+        }
+        if (cars[index] != null) {
+            System.arraycopy(cars, index, cars, index + 1, cars.length - (index + 1));
+            cars[index] = car;
+        }
+    }
+
+
     public void updateColor(String id, Color color) {
         Car car = getById(id);
         if (car != null) {
