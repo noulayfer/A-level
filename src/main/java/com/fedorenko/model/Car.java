@@ -1,8 +1,13 @@
 package com.fedorenko.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Random;
 import java.util.UUID;
 
+@Getter
+@Setter
 public class Car {
     private Color  color;
     private final String id;
@@ -10,6 +15,10 @@ public class Car {
     private Engine engine;
 
     private int count;
+
+    public Car() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     public Car(Color color) {
         count = 1;
@@ -22,33 +31,6 @@ public class Car {
         this.engine = engine;
         this.id = UUID.randomUUID().toString();
     }
-    public Engine getEngine() {
-        return engine;
-    }
-    public void setEngine(Engine engine) {
-        this.engine = engine;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
     @Override
     public String toString() {
         return String.format("[%s], %s", getId(), getColor());
