@@ -8,8 +8,8 @@ import java.util.Random;
 @Getter
 @Setter
 public class Engine {
-    int power;
-    Type type;
+    private int power;
+    private Type type;
 
     private final Random random = new Random();
 
