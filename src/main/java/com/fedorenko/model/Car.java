@@ -1,45 +1,43 @@
 package com.fedorenko.model;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class Car {
-    private String manufacturer;
-    private String  engine;
-    private String  color;
+    private Color  color;
+    private final String id;
+
+    private Engine engine;
+
     private int count;
-    private int price;
 
-    public Car() {
-    }
-
-    public Car(String manufacturer, String engine, String color) {
-        this.manufacturer = manufacturer;
-        this.engine = engine;
+    public Car(Color color) {
+        count = 1;
         this.color = color;
-        this.count = 1;
-        this.price = new Random().nextInt();
+        this.id = UUID.randomUUID().toString();
     }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+    public Car(Color color, Engine engine) {
+        count = 1;
+        this.color = color;
+        this.engine = engine;
+        this.id = UUID.randomUUID().toString();
     }
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public String getEngine() {
+    public Engine getEngine() {
         return engine;
     }
-
-    public void setEngine(String engine) {
+    public void setEngine(Engine engine) {
         this.engine = engine;
     }
 
-    public String getColor() {
+    public String getId() {
+        return id;
+    }
+
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
@@ -51,11 +49,8 @@ public class Car {
         this.count = count;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
+    @Override
+    public String toString() {
+        return String.format("[%s], %s", getId(), getColor());
     }
 }
