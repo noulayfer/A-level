@@ -3,6 +3,7 @@ package com.fedorenko.service;
 import com.fedorenko.model.Car;
 import com.fedorenko.model.Color;
 import com.fedorenko.repository.CarArrayRepository;
+import com.fedorenko.util.RandomGenerator;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -23,26 +24,47 @@ public class CarService {
         carArrayRepository.save(car);
         return car;
     }
-    public void create(final int count) {
+    public int create(final int count) {
+        if (count <= 0) {
+            return -1;
+        }
         for (int i = 0; i < count; i++) {
             create();
         }
+        return count;
     }
+
+    public int create(final RandomGenerator randomGenerator) {
+        if (randomGenerator == null) {
+            return -1;
+        }
+        int count = randomGenerator.getRandomNumber();
+        if (count <= 0) {
+            return -1;
+        }
+        create(count);
+        printAll();
+        return count;
+    }
+
     public Car[] getAll() {
         return carArrayRepository.getAll();
     }
+
     public Car find(final String id) {
         if (id == null || id.isEmpty()) {
             return null;
         }
         return carArrayRepository.getById(id);
     }
+
     public void delete(final String id) {
         if (id == null || id.isEmpty()) {
             return;
         }
         carArrayRepository.delete(id);
     }
+
     public void insertCar(final int index, final Car car) {
         carArrayRepository.insert(index, car);
     }
@@ -62,7 +84,15 @@ public class CarService {
         }
         return str;
     }
+
     public static void check(final Car car) {
+        if (car == null) {
+            return;
+        }
+        if (car.getEngine() == null) {
+            System.out.println("Engine is null");
+            return;
+        }
         if (car.getCount() > 0 && car.getEngine().getPower() > 200) {
             System.out.println("Ready to sell");
         } else if (car.getCount() > 0) {
@@ -73,6 +103,7 @@ public class CarService {
             System.out.println("Power of engine is not enough and amount of cars is 0");
         }
     }
+
     public void printAll() {
         final Car[] all = carArrayRepository.getAll();
         System.out.println(Arrays.toString(all));

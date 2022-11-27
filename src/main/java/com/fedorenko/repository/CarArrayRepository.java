@@ -11,7 +11,15 @@ public class CarArrayRepository {
 //    Delete
     private static Car[] cars = new Car[10];
 
+    public static CarArrayRepository getInstance() {
+        cars = new Car[10];
+        return new CarArrayRepository();
+    }
+
     public void save(final Car car) {
+        if (car == null) {
+            return;
+        }
         int index = putCar(car);
         if (index == cars.length){
             int oldLength = cars.length;
@@ -21,31 +29,42 @@ public class CarArrayRepository {
     }
     public Car[] getAll() {
         int newLength = foundLength();
+        if (newLength == 0) {
+            return null;
+        }
         Car[] newArr = new Car[newLength];
         System.arraycopy(cars, 0, newArr, 0, newLength);
         return newArr;
     }
     public Car getById(final String id) {
+        if (id == null || id.isBlank()) {
+            return null;
+        }
         for (Car car : cars) {
-            if (car.getId().equals(id)) {
+            if (car != null && car.getId().equals(id)) {
                 return car;
             }
         }
         return null;
     }
     public void delete(final String id) {
+        if (id == null || id.isBlank()) {
+            return;
+        }
         int index = 0;
         for (; index < cars.length; index++) {
-            if (cars[index].getId().equals(id)) {
+            if (cars[index] != null && cars[index].getId().equals(id)) {
                 break;
             }
         }
-
         if (index != cars.length) {
             System.arraycopy(cars, index + 1, cars, index, cars.length - (index + 1));
         }
     }
     public void insert(int index, final Car car) {
+        if (car == null || index < 0) {
+            return;
+        }
         if(cars[index] == null) {
             int i = index;
             for (; i >= 0; i--) {
@@ -62,7 +81,6 @@ public class CarArrayRepository {
             cars[index] = car;
         }
     }
-
 
     public void updateColor(String id, Color color) {
         Car car = getById(id);
@@ -96,6 +114,4 @@ public class CarArrayRepository {
         }
         return newLength;
     }
-
-
 }
