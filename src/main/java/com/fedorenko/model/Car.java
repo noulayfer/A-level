@@ -8,13 +8,15 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Car {
+public abstract class Car {
     private Color  color;
     private final String id;
 
     private Engine engine;
 
     private int count;
+
+    private CarType type;
 
     public Car() {
         this.id = UUID.randomUUID().toString();

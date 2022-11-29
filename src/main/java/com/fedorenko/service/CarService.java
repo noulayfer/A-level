@@ -1,10 +1,10 @@
 package com.fedorenko.service;
 
-import com.fedorenko.model.Car;
-import com.fedorenko.model.Color;
+import com.fedorenko.model.*;
 import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
 
+import javax.sound.midi.Track;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -19,8 +19,8 @@ public class CarService {
     }
 
     public Car create() {
-        Color color = getRandomColor();
-        Car car = new Car(color);
+        final Color color = getRandomColor();
+        final Car car = new PassengerCar();
         carArrayRepository.save(car);
         return car;
     }
@@ -45,6 +45,18 @@ public class CarService {
         create(count);
         printAll();
         return count;
+    }
+
+    public PassengerCar createPassengerCar() {
+        final Color color = getRandomColor();
+        final PassengerCar passengerCar = new PassengerCar(color);
+        return passengerCar;
+    }
+
+    public Truck createTruck() {
+        final Color color = getRandomColor();
+        final Truck truck = new Truck(color);
+        return truck;
     }
 
     public Car[] getAll() {
