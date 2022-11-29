@@ -64,20 +64,23 @@ public class CarService {
     }
 
     public Car find(final String id) {
-        if (id == null || id.isEmpty()) {
+        if (id == null || id.isBlank()) {
             return null;
         }
         return carArrayRepository.getById(id);
     }
 
     public void delete(final String id) {
-        if (id == null || id.isEmpty()) {
+        if (id == null || id.isBlank()) {
             return;
         }
         carArrayRepository.delete(id);
     }
 
     public void insertCar(final int index, final Car car) {
+        if (car == null || index < 0) {
+            return;
+        }
         carArrayRepository.insert(index, car);
     }
 
