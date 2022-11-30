@@ -17,8 +17,8 @@ public class PassengerCar extends Car implements CountRestore {
 
     @Override
     public void restore() {
-        passengerCount = 100;
-        System.out.println(this);
+        this.count = 100;
+        System.out.println("The count is" + count);
     }
 
     @Override

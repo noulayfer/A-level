@@ -14,7 +14,7 @@ public abstract class Car {
 
     private Engine engine;
 
-    private int count;
+    protected int count;
 
     private CarType type;
 

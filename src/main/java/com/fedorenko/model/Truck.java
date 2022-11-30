@@ -17,8 +17,8 @@ public class Truck extends Car implements CountRestore {
 
     @Override
     public void restore() {
-        this.loadCapacity = 50;
-        System.out.printf("The load capacity is %d", loadCapacity);
+        this.count = 50;
+        System.out.print("The count is" + count);
     }
 
     @Override
