@@ -1,6 +1,8 @@
 package com.fedorenko.service;
 
 import com.fedorenko.model.Car;
+import com.fedorenko.model.CarType;
+import com.fedorenko.model.Color;
 import com.fedorenko.model.PassengerCar;
 import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
@@ -174,4 +176,28 @@ class CarServiceTest {
     void printAll() {
         Assertions.assertDoesNotThrow(() -> target.printAll());
     }
+
+    @Test
+    void carEquals_with_null_car() {
+        final boolean expected = false;
+        boolean realValue = target.carEquals(car, null);
+        Assertions.assertEquals(expected, realValue);
+    }
+
+    @Test
+    void carEquals_with_same_car() {
+        final boolean expected = true;
+        boolean realValue = target.carEquals(car, car);
+        Assertions.assertEquals(expected, realValue);
+    }
+
+    @Test
+    void carEquals_cars_with_same_values() {
+        final boolean expected = false;
+        Car car1 = new PassengerCar(Color.BLACK);
+        Car car2 = new PassengerCar(Color.BLACK);
+        final boolean realValue = target.carEquals(car1, car2);
+        Assertions.assertEquals(expected, realValue);
+    }
+
 }

@@ -7,8 +7,8 @@ import com.fedorenko.service.CarService;
 public class Main {
     public static void main(String[] args) {
        CarService carService = new CarService(new CarArrayRepository());
-       final PassengerCar passengerCar = carService.createPassengerCar();
-       final Truck truck = carService.createTruck();
+       final PassengerCar passengerCar = (PassengerCar) carService.createCar(CarType.CAR);
+       final Truck truck = (Truck) carService.createCar(CarType.TRUCK);
        System.out.println(passengerCar);
        System.out.println(truck);
     }

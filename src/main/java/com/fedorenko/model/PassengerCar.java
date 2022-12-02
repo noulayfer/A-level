@@ -4,14 +4,14 @@ public class PassengerCar extends Car implements CountRestore {
     private int passengerCount;
 
     public PassengerCar() {
-        super();
+        super(CarType.CAR);
     }
     public PassengerCar(final Color color) {
-        super(color);
+        super(color, CarType.CAR);
     }
 
     public PassengerCar(final Color color, final int passengerCount) {
-        super(color);
+        super(color, CarType.CAR);
         this.passengerCount = passengerCount;
     }
 
