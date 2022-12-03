@@ -47,11 +47,11 @@ public abstract class Car {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return count == car.count && color == car.color && id.equals(car.id) && Objects.equals(engine, car.engine);
+        return count == car.count && color == car.color && type.equals(car.type) && id.equals(car.id) && Objects.equals(engine, car.engine);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, id, engine, count);
+        return Objects.hash(color, id, engine, count, type);
     }
 }

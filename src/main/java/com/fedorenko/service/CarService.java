@@ -92,29 +92,13 @@ public class CarService {
         if (car1 == null || car2 == null) {
             return false;
         }
-        CarType carType1 = car1.getType();
-        CarType carType2 = car2.getType();
-        if (carType1 != carType2) {
+        if (car1.getType() != car2.getType()) {
             return false;
-        } else {
-            if (carType1 == CAR) {
-                PassengerCar passengerCar1 = (PassengerCar) car1;
-                PassengerCar passengerCar2 = (PassengerCar) car2;
-                if (passengerCar1.hashCode() != passengerCar2.hashCode()) {
-                    return false;
-                } else {
-                    return passengerCar1.equals(passengerCar2);
-                }
-            } else {
-                Truck truck1 = (Truck) car1;
-                Truck truck2 = (Truck) car2;
-                if (truck1.hashCode() != truck2.hashCode()) {
-                    return false;
-                } else {
-                    return truck1.equals(truck2);
-                }
-            }
         }
+        if (car1.hashCode() != car2.hashCode()) {
+            return false;
+        }
+        return car1.equals(car2);
     }
 
 
