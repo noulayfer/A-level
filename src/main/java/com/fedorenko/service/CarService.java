@@ -3,10 +3,12 @@ package com.fedorenko.service;
 import com.fedorenko.model.*;
 import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
+import lombok.Getter;
 
 import javax.sound.midi.Track;
-import java.util.Arrays;
-import java.util.Random;
+import java.io.ObjectStreamException;
+import java.util.*;
+import java.util.function.Supplier;
 
 import static com.fedorenko.model.CarType.*;
 
@@ -101,10 +103,48 @@ public class CarService {
         return car1.equals(car2);
     }
 
+    public void printManufacturerAndCount(final Car car) {
+        final Optional<Car> optionalCar = Optional.ofNullable(car);
+        optionalCar.ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
+    }
+
+    public void printColor(final Car car) {
+        final Optional<Car> optionalCar = Optional.ofNullable(car);
+        System.out.println(optionalCar.orElse(new PassengerCar(getRandomColor())).getColor());
+    }
+
+    public void checkCount(final Car car) {
+        final Optional<Car> optionalCar = Optional.ofNullable(car);
+        Car car1 = optionalCar.filter(x -> x.getCount() > 10)
+                .orElseThrow(() -> new UserInputException("count - 10 or less"));
+        System.out.println(car1.getCount() + " " + car1.getType());
+    }
+
+    public void printEngineInfo(final Car car) {
+        final Optional<Car> optionalCar = Optional.ofNullable(car);
+        System.out.println(optionalCar.map(x -> x.getEngine()).
+                orElseGet(() -> getRandomTypeCar().getEngine()).getPower());
+    }
+
+    public void printInfo(final Car car) {
+        final Optional<Car> optionalCar = Optional.ofNullable(car);
+        optionalCar.ifPresentOrElse(x -> System.out.println(x),
+                () -> System.out.println(getRandomTypeCar()));
+    }
+
+    private Car getRandomTypeCar() {
+        final Random random = new Random();
+        int randomInt = random.nextInt(2);
+        if (randomInt == 0) {
+            return new PassengerCar(getRandomColor(), new Engine());
+        } else {
+            return new Truck(getRandomColor(), new Engine());
+        }
+    }
 
     private String randomString() {
         String str = "";
-        Random random = new Random();
+        final Random random = new Random();
         int[] randomArr = random.ints(random.ints(1, 3, 10)
                 .findAny().getAsInt(), 0, 25).toArray();
         for (int i : randomArr) {
@@ -147,5 +187,11 @@ public class CarService {
         final Color[] values = Color.values();
         final int randomIndex = random.nextInt(values.length);
         return values[randomIndex];
+    }
+}
+
+class UserInputException extends RuntimeException {
+    public UserInputException(final String message) {
+        super(message);
     }
 }

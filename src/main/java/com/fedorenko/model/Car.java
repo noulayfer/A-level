@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class Car {
+public abstract class Car implements CountRestore {
     private Color  color;
     private final String id;
 

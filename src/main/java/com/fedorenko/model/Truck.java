@@ -1,6 +1,6 @@
 package com.fedorenko.model;
 
-public class Truck extends Car implements CountRestore {
+public class Truck extends Car {
     private int loadCapacity;
 
     public Truck() {
@@ -9,6 +9,10 @@ public class Truck extends Car implements CountRestore {
 
     public Truck(final Color color) {
         super(color, CarType.TRUCK);
+    }
+
+    public Truck(final Color color, final Engine engine) {
+        super(color, engine, CarType.TRUCK);
     }
 
     public Truck(final Color color, final int loadCapacity) {
