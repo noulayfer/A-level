@@ -2,6 +2,7 @@ package com.fedorenko.repository;
 
 import com.fedorenko.model.Car;
 import com.fedorenko.model.Color;
+import com.fedorenko.model.PassengerCar;
 import com.fedorenko.service.CarService;
 import com.fedorenko.util.RandomGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +20,7 @@ class CarArrayRepositoryTest {
     @BeforeEach
     void setUp() {
         target = CarArrayRepository.getInstance();
-        car = new Car();
+        car = new PassengerCar();
     }
 
     @Test
@@ -34,7 +35,7 @@ class CarArrayRepositoryTest {
         for (int i = 0; i < length; i++) {
             target.save(car);
         }
-        Assertions.assertDoesNotThrow(() -> target.save(new Car()));
+        Assertions.assertDoesNotThrow(() -> target.save(new PassengerCar()));
     }
 
     @Test
@@ -49,7 +50,7 @@ class CarArrayRepositoryTest {
 
     @Test
     void getAll_with_positive() {
-        Car car1 = new Car();
+        Car car1 = new PassengerCar();
         target.save(car1);
         Car car2 = target.getAll()[0];
         Assertions.assertEquals(car1, car2);
@@ -102,7 +103,7 @@ class CarArrayRepositoryTest {
     @Test
     void insert_with_positive() {
         target.save(car);
-        Car car1 = new Car();
+        Car car1 = new PassengerCar();
         target.insert(8, car1);
         int expectedPosition = 1;
         Assertions.assertEquals(car1, target.getAll()[expectedPosition]);
