@@ -8,6 +8,8 @@ import javax.sound.midi.Track;
 import java.util.Arrays;
 import java.util.Random;
 
+import static com.fedorenko.model.CarType.*;
+
 
 public class CarService {
     private final String alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -24,6 +26,7 @@ public class CarService {
         carArrayRepository.save(car);
         return car;
     }
+
     public int create(final int count) {
         if (count <= 0) {
             return -1;
@@ -47,16 +50,17 @@ public class CarService {
         return count;
     }
 
-    public PassengerCar createPassengerCar() {
+    public Car createCar(CarType carType) {
         final Color color = getRandomColor();
-        final PassengerCar passengerCar = new PassengerCar(color);
-        return passengerCar;
-    }
-
-    public Truck createTruck() {
-        final Color color = getRandomColor();
-        final Truck truck = new Truck(color);
-        return truck;
+        final Car car;
+        if (carType.equals(CAR)) {
+            car = new PassengerCar(color);
+        } else if (carType.equals(TRUCK)) {
+            car = new Truck(color);
+        } else {
+            car = null;
+        }
+        return car;
     }
 
     public Car[] getAll() {
@@ -84,11 +88,25 @@ public class CarService {
         carArrayRepository.insert(index, car);
     }
 
+    public boolean carEquals(Car car1, Car car2) {
+        if (car1 == null || car2 == null) {
+            return false;
+        }
+        if (car1.getType() != car2.getType()) {
+            return false;
+        }
+        if (car1.hashCode() != car2.hashCode()) {
+            return false;
+        }
+        return car1.equals(car2);
+    }
+
+
     private String randomString() {
         String str = "";
         Random random = new Random();
-        int[] randomArr = random.ints(random.ints(1, 3,10)
-                        .findAny().getAsInt(), 0, 25).toArray();
+        int[] randomArr = random.ints(random.ints(1, 3, 10)
+                .findAny().getAsInt(), 0, 25).toArray();
         for (int i : randomArr) {
             int j = random.nextInt();
             if (j % 2 == 0) {

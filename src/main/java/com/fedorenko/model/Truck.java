@@ -4,14 +4,15 @@ public class Truck extends Car implements CountRestore {
     private int loadCapacity;
 
     public Truck() {
+        super(CarType.TRUCK);
     }
 
     public Truck(final Color color) {
-        super(color);
+        super(color, CarType.TRUCK);
     }
 
     public Truck(final Color color, final int loadCapacity) {
-        super(color);
+        super(color, CarType.TRUCK);
         this.loadCapacity = loadCapacity;
     }
 
