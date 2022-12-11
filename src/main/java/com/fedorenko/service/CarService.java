@@ -17,14 +17,28 @@ public class CarService {
     private final String alphabet = "abcdefghijklmnopqrstuvwxyz";
     private final Random random = new Random();
     private final CarArrayRepository carArrayRepository;
+    private static CarService carService;
 
-    public CarService(final CarArrayRepository carArrayRepository) {
+    private CarService(final CarArrayRepository carArrayRepository) {
         this.carArrayRepository = carArrayRepository;
+    }
+
+    public static CarService getInstance() {
+        if (carService == null) {
+            return new CarService(CarArrayRepository.getInstance());
+        }
+        return carService;
+    }
+    public static CarService getInstance(final CarArrayRepository repository) {
+        if (carService == null) {
+            carService = new CarService(repository);
+        }
+        return carService;
     }
 
     public Car create() {
         final Color color = getRandomColor();
-        final Car car = new PassengerCar();
+        final Car car = new PassengerCar(color);
         carArrayRepository.save(car);
         return car;
     }
@@ -66,6 +80,9 @@ public class CarService {
     }
 
     public Car[] getAll() {
+        if (carArrayRepository.getAll() == null) {
+            return new Car[0];
+        }
         return carArrayRepository.getAll();
     }
 
