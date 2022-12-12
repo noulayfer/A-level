@@ -144,8 +144,8 @@ public class CarService {
     }
 
     public void printInfo(final Car car) {
-        final Optional<Car> optionalCar = Optional.ofNullable(car);
-        optionalCar.ifPresentOrElse(x -> System.out.println(x),
+        Optional.ofNullable(car)
+                .ifPresentOrElse(x -> System.out.println(x),
                 () -> System.out.println(getRandomTypeCar()));
     }
 
@@ -204,11 +204,5 @@ public class CarService {
         final Color[] values = Color.values();
         final int randomIndex = random.nextInt(values.length);
         return values[randomIndex];
-    }
-}
-
-class UserInputException extends RuntimeException {
-    public UserInputException(final String message) {
-        super(message);
     }
 }
