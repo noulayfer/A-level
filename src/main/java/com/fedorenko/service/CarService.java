@@ -121,8 +121,8 @@ public class CarService {
     }
 
     public void printManufacturerAndCount(final Car car) {
-        final Optional<Car> optionalCar = Optional.ofNullable(car);
-        optionalCar.ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
+        Optional.ofNullable(car)
+        .ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
     }
 
     public void printColor(final Car car) {
@@ -204,11 +204,5 @@ public class CarService {
         final Color[] values = Color.values();
         final int randomIndex = random.nextInt(values.length);
         return values[randomIndex];
-    }
-}
-
-class UserInputException extends RuntimeException {
-    public UserInputException(final String message) {
-        super(message);
     }
 }

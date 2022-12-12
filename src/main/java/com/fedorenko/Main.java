@@ -39,7 +39,9 @@ public class Main {
 //        System.out.println(Arrays.toString(sortedCars));
 //
 //        int someInt = AlgorithmUtil.binarySearch(sortedCars, sortedCars[7], 0, sortedCars.length);
+//
 //        System.out.println(someInt);
+
 //
     }
 }
