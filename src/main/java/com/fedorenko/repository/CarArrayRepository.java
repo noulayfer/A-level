@@ -3,7 +3,7 @@ package com.fedorenko.repository;
 import com.fedorenko.model.Car;
 import com.fedorenko.model.Color;
 
-public class CarArrayRepository {
+public class CarArrayRepository implements RepositoryInterface<Car> {
     //    CRUD
 //    Create (Save, Insert)
 //    Read (getById, getAll)
