@@ -1,6 +1,6 @@
 package com.fedorenko.model;
 
-public class PassengerCar extends Car implements CountRestore {
+public class PassengerCar extends Car {
     private int passengerCount;
 
     public PassengerCar() {
@@ -8,6 +8,10 @@ public class PassengerCar extends Car implements CountRestore {
     }
     public PassengerCar(final Color color) {
         super(color, CarType.CAR);
+    }
+
+    public PassengerCar(final Color color, final Engine engine) {
+        super(color, engine, CarType.CAR);
     }
 
     public PassengerCar(final Color color, final int passengerCount) {

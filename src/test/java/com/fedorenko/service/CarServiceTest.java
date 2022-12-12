@@ -23,6 +23,7 @@ class CarServiceTest {
     private CarArrayRepository repository;
     private RandomGenerator randomGenerator;
     private Car car;
+
     @BeforeEach
     void setUp() {
         repository = Mockito.mock(CarArrayRepository.class);
@@ -69,6 +70,7 @@ class CarServiceTest {
         final int expectedCount = 7;
         Assertions.assertEquals(expectedCount, realCount);
     }
+
     @Test
     void create_with_negative_count() {
         final int count = -7;
@@ -117,6 +119,7 @@ class CarServiceTest {
         Assertions.assertNull(target.find(emptyStr));
         Mockito.verify(repository, Mockito.never()).getById(emptyStr);
     }
+
     @Test
     void find_not_null() {
         Mockito.when(repository.getById("random")).thenReturn(car);
@@ -124,6 +127,7 @@ class CarServiceTest {
         Assertions.assertNotNull(car);
         Mockito.verify(repository).getById(Mockito.anyString());
     }
+
     @Test
     void delete_with_positive() {
         Assertions.assertDoesNotThrow(() -> target.delete("random"));
@@ -149,12 +153,14 @@ class CarServiceTest {
         Assertions.assertDoesNotThrow(() -> target.insertCar(randomIndex, car));
         Mockito.verify(repository).insert(randomIndex, car);
     }
+
     @Test
     void insertCar_with_incorrect_index() {
         int randomIndex = -3;
         Assertions.assertDoesNotThrow(() -> target.insertCar(randomIndex, car));
         Mockito.verify(repository, Mockito.never()).insert(randomIndex, car);
     }
+
     @Test
     void insertCar_null_car() {
         int randomIndex = 4;
@@ -200,4 +206,60 @@ class CarServiceTest {
         Assertions.assertEquals(expected, realValue);
     }
 
+    @Test
+    void checkCount_null() {
+        assertThrows(UserInputException.class, () -> target.checkCount(null));
+    }
+
+    @Test
+    void checkCount_negative_filter() {
+        car.setCount(5);
+        assertThrows(UserInputException.class, () -> target.checkCount(car));
+    }
+
+    @Test
+    void checkCount_with_positive() {
+        car.setCount(20);
+        Assertions.assertDoesNotThrow(() -> target.checkCount(car));
+    }
+
+    @Test
+    void printManufacturerAndCount_null() {
+        Assertions.assertDoesNotThrow(() -> target.printManufacturerAndCount(null));
+    }
+
+    @Test
+    void printManufacturerAndCount_positive() {
+        Assertions.assertDoesNotThrow(() -> target.printManufacturerAndCount(car));
+    }
+
+    @Test
+    void printColor_null() {
+        Assertions.assertDoesNotThrow(() -> target.printColor(null));
+    }
+
+    @Test
+    void printColor_positive() {
+        Assertions.assertDoesNotThrow(() -> target.printColor(car));
+    }
+
+    @Test
+    void printEngineInfo_null() {
+        Assertions.assertDoesNotThrow(() -> target.printEngineInfo(null));
+    }
+
+    @Test
+    void printEngineInfo_positive() {
+        Assertions.assertDoesNotThrow(() -> target.printEngineInfo(car));
+    }
+
+    @Test
+    void printInfo_positive() {
+        Assertions.assertDoesNotThrow(() -> target.printInfo(car));
+    }
+
+    @Test
+    void printInfo_null() {
+        Assertions.assertDoesNotThrow(() -> target.printInfo(null));
+    }
 }
