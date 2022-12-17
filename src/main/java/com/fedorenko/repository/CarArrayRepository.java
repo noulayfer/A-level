@@ -10,10 +10,17 @@ public class CarArrayRepository {
 //    Update
 //    Delete
     private static Car[] cars = new Car[10];
+    private static CarArrayRepository carArrayRepository;
+
+    private CarArrayRepository() {
+    }
 
     public static CarArrayRepository getInstance() {
         cars = new Car[10];
-        return new CarArrayRepository();
+        if (carArrayRepository == null) {
+            return new CarArrayRepository();
+        }
+        return carArrayRepository;
     }
 
     public void save(final Car car) {

@@ -17,14 +17,28 @@ public class CarService {
     private final String alphabet = "abcdefghijklmnopqrstuvwxyz";
     private final Random random = new Random();
     private final CarArrayRepository carArrayRepository;
+    private static CarService carService;
 
-    public CarService(final CarArrayRepository carArrayRepository) {
+    private CarService(final CarArrayRepository carArrayRepository) {
         this.carArrayRepository = carArrayRepository;
+    }
+
+    public static CarService getInstance() {
+        if (carService == null) {
+            return new CarService(CarArrayRepository.getInstance());
+        }
+        return carService;
+    }
+    public static CarService getInstance(final CarArrayRepository repository) {
+        if (carService == null) {
+            carService = new CarService(repository);
+        }
+        return carService;
     }
 
     public Car create() {
         final Color color = getRandomColor();
-        final Car car = new PassengerCar();
+        final Car car = new PassengerCar(color);
         carArrayRepository.save(car);
         return car;
     }
@@ -66,6 +80,9 @@ public class CarService {
     }
 
     public Car[] getAll() {
+        if (carArrayRepository.getAll() == null) {
+            return new Car[0];
+        }
         return carArrayRepository.getAll();
     }
 
@@ -127,8 +144,8 @@ public class CarService {
     }
 
     public void printInfo(final Car car) {
-        final Optional<Car> optionalCar = Optional.ofNullable(car);
-        optionalCar.ifPresentOrElse(x -> System.out.println(x),
+        Optional.ofNullable(car)
+                .ifPresentOrElse(x -> System.out.println(x),
                 () -> System.out.println(getRandomTypeCar()));
     }
 
@@ -187,11 +204,5 @@ public class CarService {
         final Color[] values = Color.values();
         final int randomIndex = random.nextInt(values.length);
         return values[randomIndex];
-    }
-}
-
-class UserInputException extends RuntimeException {
-    public UserInputException(final String message) {
-        super(message);
     }
 }
