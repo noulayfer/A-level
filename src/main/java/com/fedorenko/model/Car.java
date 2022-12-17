@@ -39,7 +39,7 @@ public abstract class Car implements CountRestore {
     }
     @Override
     public String toString() {
-        return String.format("[%s], %s", getId(), getColor());
+       return String.format("[%s], %s", getId(), getColor());
     }
 
     @Override

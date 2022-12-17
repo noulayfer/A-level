@@ -1,9 +1,6 @@
 package com.fedorenko.service;
 
-import com.fedorenko.model.Car;
-import com.fedorenko.model.CarType;
-import com.fedorenko.model.Color;
-import com.fedorenko.model.PassengerCar;
+import com.fedorenko.model.*;
 import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +24,7 @@ class CarServiceTest {
     @BeforeEach
     void setUp() {
         repository = Mockito.mock(CarArrayRepository.class);
-        target = CarService.getInstance(repository);
+        target = CarService.getInstance();
         randomGenerator = Mockito.mock(RandomGenerator.class);
         car = new PassengerCar();
     }
@@ -36,7 +33,6 @@ class CarServiceTest {
     void create_not_null() {
         final Car car = target.create();
         Assertions.assertNotNull(car);
-        Mockito.verify(repository).save(car);
     }
 
     @Test
@@ -90,13 +86,11 @@ class CarServiceTest {
     @Test
     void getAll_does_not_throw() {
         Assertions.assertDoesNotThrow(() -> target.getAll());
-        Mockito.verify(repository).getAll();
     }
 
     @Test
-    void getAll_is_null() {
-        Assertions.assertNull(target.getAll());
-        Mockito.verify(repository).getAll();
+    void getAll_is_zero_length() {
+        Assertions.assertEquals(0, target.getAll().length);
     }
 
     @Test
@@ -104,7 +98,6 @@ class CarServiceTest {
         final Car[] cars = {new PassengerCar(), new PassengerCar()};
         Mockito.when(repository.getAll()).thenReturn(cars);
         Assertions.assertNotNull(target.getAll());
-        Mockito.verify(repository).getAll();
     }
 
     @Test
@@ -122,16 +115,13 @@ class CarServiceTest {
 
     @Test
     void find_not_null() {
-        Mockito.when(repository.getById("random")).thenReturn(car);
-        Car car = target.find("random");
-        Assertions.assertNotNull(car);
-        Mockito.verify(repository).getById(Mockito.anyString());
+        Mockito.when(repository.getById("random")).thenReturn(new Truck());
+        Assertions.assertNotNull(target.find("random"));
     }
 
     @Test
     void delete_with_positive() {
         Assertions.assertDoesNotThrow(() -> target.delete("random"));
-        Mockito.verify(repository).delete(Mockito.anyString());
     }
 
     @Test
@@ -151,7 +141,6 @@ class CarServiceTest {
     void insertCar_with_positive() {
         int randomIndex = 7;
         Assertions.assertDoesNotThrow(() -> target.insertCar(randomIndex, car));
-        Mockito.verify(repository).insert(randomIndex, car);
     }
 
     @Test
