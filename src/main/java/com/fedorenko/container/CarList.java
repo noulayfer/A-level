@@ -60,12 +60,17 @@ public class CarList<E extends Car> implements Iterable<E> {
     }
 
     public void insertCar(final int index, final E element) {
+        if (index < 0 || index > this.size) {
+            return;
+        }
         if (index == 0) {
             add(element);
+            size++;
             return;
         }
         if (index == this.size) {
             addInEnd(element);
+            size++;
             return;
         }
         Node<E> node = getNodeByIndex(index).orElseThrow();
@@ -73,6 +78,7 @@ public class CarList<E extends Car> implements Iterable<E> {
         Node<E> newNode = new Node<>(element, tempNode, node);
         tempNode.next = newNode;
         node.prev = newNode;
+        size++;
     }
 
     private Optional<Node<E>> getNodeByIndex(final int index) {
@@ -97,6 +103,7 @@ public class CarList<E extends Car> implements Iterable<E> {
         Node<E> nextNode = nodeByIndex.next;
         prevNode.next = nextNode;
         nextNode.prev = nextNode;
+        size--;
     }
 
     public int sumAllCount() {
