@@ -5,10 +5,13 @@ import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
 import lombok.Getter;
 
+import javax.print.attribute.standard.PrinterMoreInfoManufacturer;
 import javax.sound.midi.Track;
 import java.io.ObjectStreamException;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static com.fedorenko.model.CarType.*;
 
@@ -131,8 +134,7 @@ public class CarService {
     }
 
     public void checkCount(final Car car) {
-        final Optional<Car> optionalCar = Optional.ofNullable(car);
-        Car car1 = optionalCar.filter(x -> x.getCount() > 10)
+        Car car1 = Optional.ofNullable(car).filter(x -> x.getCount() > 10)
                 .orElseThrow(() -> new UserInputException("count - 10 or less"));
         System.out.println(car1.getCount() + " " + car1.getType());
     }
@@ -149,6 +151,24 @@ public class CarService {
                 () -> System.out.println(getRandomTypeCar()));
     }
 
+    public Map<String, Integer> mappingManufacturerAndCount() {
+       final Map<String, Integer> map  = Arrays.stream(getAll())
+                .collect(Collectors.toMap(Car::getManufacturer, Car::getCount,
+                        (x, someElement) -> x));
+        return map;
+    }
+
+    public Map<Integer, List<Car>> mappingPowerToCarList() {
+        final List<Engine> list = Arrays.stream(getAll()).map(Car::getEngine).collect(Collectors.toList());
+        Map<Integer, List<Car>> map = new HashMap<>();
+        for (Engine engine : list) {
+            List<Car> carWithSameEngine = Arrays.stream(getAll())
+                    .filter(x -> x.getEngine().equals(engine)).collect(Collectors.toList());
+            map.put(engine.getPower(), carWithSameEngine);
+        }
+        return map;
+    }
+
     private Car getRandomTypeCar() {
         final Random random = new Random();
         int randomInt = random.nextInt(2);
@@ -159,7 +179,7 @@ public class CarService {
         }
     }
 
-    private String randomString() {
+    public String randomString() {
         String str = "";
         final Random random = new Random();
         int[] randomArr = random.ints(random.ints(1, 3, 10)
