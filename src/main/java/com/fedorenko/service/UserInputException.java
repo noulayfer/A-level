@@ -5,3 +5,4 @@ class UserInputException extends RuntimeException {
         super(message);
     }
 }
+

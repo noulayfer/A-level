@@ -121,8 +121,8 @@ public class CarService {
     }
 
     public void printManufacturerAndCount(final Car car) {
-        final Optional<Car> optionalCar = Optional.ofNullable(car);
-        optionalCar.ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
+        Optional.ofNullable(car)
+        .ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
     }
 
     public void printColor(final Car car) {
@@ -144,8 +144,8 @@ public class CarService {
     }
 
     public void printInfo(final Car car) {
-        Optional.ofNullable(car)
-                .ifPresentOrElse(x -> System.out.println(x),
+        final Optional<Car> optionalCar = Optional.ofNullable(car);
+        optionalCar.ifPresentOrElse(x -> System.out.println(x),
                 () -> System.out.println(getRandomTypeCar()));
     }
 
