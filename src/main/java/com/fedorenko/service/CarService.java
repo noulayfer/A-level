@@ -3,14 +3,10 @@ package com.fedorenko.service;
 import com.fedorenko.model.*;
 import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
-import lombok.Getter;
 
-import javax.print.attribute.standard.PrinterMoreInfoManufacturer;
-import javax.sound.midi.Track;
-import java.io.ObjectStreamException;
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.fedorenko.model.CarType.*;
@@ -32,6 +28,7 @@ public class CarService {
         }
         return carService;
     }
+
     public static CarService getInstance(final CarArrayRepository repository) {
         if (carService == null) {
             carService = new CarService(repository);
@@ -125,7 +122,7 @@ public class CarService {
 
     public void printManufacturerAndCount(final Car car) {
         Optional.ofNullable(car)
-        .ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
+                .ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
     }
 
     public void printColor(final Car car) {
@@ -151,15 +148,15 @@ public class CarService {
                 () -> System.out.println(getRandomTypeCar()));
     }
 
-    public Map<String, Integer> mappingManufacturerAndCount() {
-       final Map<String, Integer> map  = Arrays.stream(getAll())
+    public Map<String, Integer> mappingManufacturerAndCount(final List<? extends Car> cars) {
+        final Map<String, Integer> map = cars.stream()
                 .collect(Collectors.toMap(Car::getManufacturer, Car::getCount,
                         (x, someElement) -> x));
         return map;
     }
 
-    public Map<Integer, List<Car>> mappingPowerToCarList() {
-        final List<Engine> list = Arrays.stream(getAll()).map(Car::getEngine).collect(Collectors.toList());
+    public Map<Integer, List<Car>> mappingPowerToCarList(final List<? extends Car> cars) {
+        final List<Engine> list = cars.stream().map(Car::getEngine).collect(Collectors.toList());
         Map<Integer, List<Car>> map = new HashMap<>();
         for (Engine engine : list) {
             List<Car> carWithSameEngine = Arrays.stream(getAll())
@@ -218,6 +215,62 @@ public class CarService {
         final Car[] all = carArrayRepository.getAll();
         System.out.println(Arrays.toString(all));
         System.out.println();
+    }
+
+    public void findManufacturerByPrice(final List<? extends Car> cars, int price) {
+        List<String> strings = cars.stream().filter(x -> x.getPrice() > price)
+                .map(Car::getManufacturer).collect(Collectors.toList());
+    }
+
+    public int countSum(final List<? extends Car> cars) {
+        int sum = cars.stream().map(Car::getPrice)
+                .reduce(0, Integer::sum);
+        return sum;
+    }
+
+    public Map<String, CarType> mapToMap(final List<? extends Car> cars) {
+        LinkedHashMap<String, CarType> map = cars.stream()
+                .sorted(Comparator.comparing(Car::getManufacturer))
+                .distinct()
+                .collect(Collectors.toMap(Car::getId, Car::getType, (x, y) -> y, LinkedHashMap::new));
+        return map;
+    }
+
+    public DoubleSummaryStatistics statistic(final List<? extends Car> cars) {
+        DoubleSummaryStatistics doubleSummaryStatistics = cars.stream()
+                .collect(Collectors.summarizingDouble(Car::getPrice));
+        return doubleSummaryStatistics;
+    }
+
+    public boolean priceCheck(final List<? extends Car> cars, int price) {
+        boolean isAllMatch = cars.stream().allMatch(x -> x.getPrice() > price);
+        return isAllMatch;
+    }
+
+    public Car mapToObject(final Map<String, Object> map) {
+        Car car = map.entrySet().stream().map(x -> {
+            if (x.getValue() == CAR) {
+                final PassengerCar passengerCar = new PassengerCar();
+                passengerCar.setManufacturer(x.getKey());
+                return passengerCar;
+            } else if (x.getValue() == TRUCK) {
+                final Truck truck = new Truck();
+                truck.setManufacturer(x.getKey());
+                return new Truck();
+            } else {
+                return null;
+            }
+        }).findAny().orElseThrow(IllegalArgumentException::new);
+        return car;
+    }
+
+    public Map<Color, Integer> innerList (final List<List<Car>> cars) {
+        Map<Color, Integer> map = cars.stream().flatMap(List::stream)
+                .sorted(Comparator.comparing(Car::getColor))
+                .peek(System.out::println)
+                .filter(x -> x.getPrice() > 2500)
+                .collect(Collectors.toMap(Car::getColor, Car::getCount));
+        return map;
     }
 
     private Color getRandomColor() {
