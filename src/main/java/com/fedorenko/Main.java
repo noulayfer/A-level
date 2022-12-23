@@ -39,6 +39,15 @@ public class Main {
         System.out.println(carTree.sumCarCount(carTree.getRoot()));
 
 
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", 35);
+        map.put("color", Color.BLACK);
+        map.put("type", CarType.CAR);
+
+        Car car = CarService.getInstance().mapToObject(map);
+        System.out.println(car);
+
+
     }
 }
 

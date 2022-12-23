@@ -5,8 +5,8 @@ import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.fedorenko.model.CarType.*;
@@ -249,22 +249,29 @@ public class CarService {
 
     public Car mapToObject(final Map<String, Object> map) {
         Car car = map.entrySet().stream().map(x -> {
-            if (x.getValue() == CAR) {
-                final PassengerCar passengerCar = new PassengerCar();
-                passengerCar.setManufacturer(x.getKey());
-                return passengerCar;
-            } else if (x.getValue() == TRUCK) {
-                final Truck truck = new Truck();
-                truck.setManufacturer(x.getKey());
+            if (x.getValue().equals(CAR)) {
+                return new PassengerCar();
+            } else if (x.getValue().equals(TRUCK)) {
                 return new Truck();
             } else {
                 return null;
             }
-        }).findAny().orElseThrow(IllegalArgumentException::new);
+        }).filter(Objects::nonNull).findAny().orElseThrow(IllegalArgumentException::new);
+
+        map.entrySet().stream().forEach(x -> {
+            switch (x.getKey()) {
+                case "count":
+                    car.setCount((int) x.getValue());
+                    break;
+                case "color":
+                    car.setColor((Color) x.getValue());
+                    break;
+            }
+        });
         return car;
     }
 
-    public Map<Color, Integer> innerList (final List<List<Car>> cars) {
+    public Map<Color, Integer> innerList(final List<List<Car>> cars) {
         Map<Color, Integer> map = cars.stream().flatMap(List::stream)
                 .sorted(Comparator.comparing(Car::getColor))
                 .peek(System.out::println)
