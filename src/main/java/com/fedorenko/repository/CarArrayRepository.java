@@ -1,5 +1,6 @@
 package com.fedorenko.repository;
 
+
 import com.fedorenko.model.Car;
 import com.fedorenko.model.Color;
 
@@ -22,7 +23,7 @@ public class CarArrayRepository implements RepositoryInterface<Car> {
         }
         return carArrayRepository;
     }
-
+    @Override
     public void save(final Car car) {
         if (car == null) {
             return;
@@ -34,6 +35,7 @@ public class CarArrayRepository implements RepositoryInterface<Car> {
             cars[oldLength] = car;
         }
     }
+    @Override
     public Car[] getAll() {
         int newLength = foundLength();
         if (newLength == 0) {
@@ -43,6 +45,7 @@ public class CarArrayRepository implements RepositoryInterface<Car> {
         System.arraycopy(cars, 0, newArr, 0, newLength);
         return newArr;
     }
+    @Override
     public Car getById(final String id) {
         if (id == null || id.isBlank()) {
             return null;
@@ -54,6 +57,7 @@ public class CarArrayRepository implements RepositoryInterface<Car> {
         }
         return null;
     }
+    @Override
     public void delete(final String id) {
         if (id == null || id.isBlank()) {
             return;
@@ -68,6 +72,7 @@ public class CarArrayRepository implements RepositoryInterface<Car> {
             System.arraycopy(cars, index + 1, cars, index, cars.length - (index + 1));
         }
     }
+    @Override
     public void insert(int index, final Car car) {
         if (car == null || index < 0) {
             return;

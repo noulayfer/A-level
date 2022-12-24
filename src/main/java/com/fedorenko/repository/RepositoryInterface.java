@@ -1,6 +1,8 @@
 package com.fedorenko.repository;
 
 
+import com.fedorenko.model.Car;
+
 public interface RepositoryInterface<T> {
     void save(final T t);
     T[] getAll();

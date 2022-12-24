@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+
 public class UserInput {
     private static final BufferedReader BUFFERED_READER = new BufferedReader(new InputStreamReader(System.in));
 
@@ -25,6 +26,7 @@ public class UserInput {
         } while (userChoice < 0 || userChoice >= names.length);
         return userChoice;
     }
+
     @SneakyThrows
     public static int getInt(String option) {
         String userInput;
