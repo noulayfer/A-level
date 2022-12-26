@@ -1,13 +1,9 @@
 package com.fedorenko;
 
 
-import com.fedorenko.action.Actions;
-import com.fedorenko.container.CarList;
 import com.fedorenko.container.CarTree;
 import com.fedorenko.model.*;
 import com.fedorenko.service.CarService;
-import com.fedorenko.util.AlgorithmUtil;
-import com.fedorenko.util.UserInput;
 
 import java.util.*;
 
@@ -43,8 +39,10 @@ public class Main {
         map.put("count", 35);
         map.put("color", Color.BLACK);
         map.put("type", CarType.CAR);
+        map.put("passengerCount", 43);
+        CarService carService = CarService.getInstance();
 
-        Car car = CarService.getInstance().mapToObject(map);
+        Car car = carService.mapToObject.apply(map);
         System.out.println(car);
 
 

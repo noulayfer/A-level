@@ -5,8 +5,7 @@ import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.fedorenko.model.CarType.*;
@@ -247,27 +246,41 @@ public class CarService {
         return isAllMatch;
     }
 
-    public Car mapToObject(final Map<String, Object> map) {
-        Car car = map.entrySet().stream().map(x -> {
-            if (x.getValue().equals(CAR)) {
-                return new PassengerCar();
-            } else if (x.getValue().equals(TRUCK)) {
-                return new Truck();
-            } else {
-                return null;
-            }
-        }).filter(Objects::nonNull).findAny().orElseThrow(IllegalArgumentException::new);
+    public Function<Map<String, Object>, Car> mapToObject = map -> {
+        CarType type = (CarType) map.getOrDefault("type", CAR);
+        if (type == CAR) {
+            return createPassengerCar(map);
+        } else {
+            return createTruck(map);
+        }
+    };
 
-        map.entrySet().stream().forEach(x -> {
-            switch (x.getKey()) {
-                case "count":
-                    car.setCount((int) x.getValue());
-                    break;
-                case "color":
-                    car.setColor((Color) x.getValue());
-                    break;
-            }
-        });
+    private PassengerCar createPassengerCar(final Map<String, Object> map) {
+        final PassengerCar passengerCar = (PassengerCar) createAbstractCar(CAR, map);
+        final int passengerCount = (int) map.getOrDefault("passengerCount", 1);
+        passengerCar.setPassengerCount(passengerCount);
+        return passengerCar;
+    }
+
+    private Truck createTruck(final Map<String, Object> map) {
+        final Truck truck = (Truck) createAbstractCar(TRUCK, map);
+        final int loadCapacity = (int) map.getOrDefault("loadCapacity", 10);
+        truck.setLoadCapacity(loadCapacity);
+        return truck;
+    }
+
+    private Car createAbstractCar(final CarType type, final Map<String, Object> map) {
+        final Car car;
+        if (type == CAR) {
+            car = new PassengerCar();
+
+        } else {
+            car = new Truck();
+        }
+        final int count = (int) map.getOrDefault("count", 10);
+        car.setCount(count);
+        final Color color = (Color) map.getOrDefault("color", Color.BLACK);
+        car.setColor(color);
         return car;
     }
 

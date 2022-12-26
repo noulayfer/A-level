@@ -1,5 +1,8 @@
 package com.fedorenko.model;
 
+import lombok.Setter;
+
+@Setter
 public class Truck extends Car {
     private int loadCapacity;
 
