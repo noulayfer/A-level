@@ -16,7 +16,7 @@ public abstract class Car implements CountRestore {
 
     private static final CarService CAR_SERVICE = CarService.getInstance();
     private Color  color;
-    private final String id;
+    private String id;
 
     private Engine engine;
 

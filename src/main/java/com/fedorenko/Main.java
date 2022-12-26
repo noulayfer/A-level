@@ -5,47 +5,19 @@ import com.fedorenko.container.CarTree;
 import com.fedorenko.model.*;
 import com.fedorenko.service.CarService;
 
+import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class Main {
 
-    public static void main(String[] args) {
-        PassengerCar passengerCar1 = new PassengerCar();
-        PassengerCar passengerCar2 = new PassengerCar();
-        PassengerCar passengerCar3 = new PassengerCar();
-        PassengerCar passengerCar4 = new PassengerCar();
-        PassengerCar passengerCar5 = new PassengerCar();
-        PassengerCar passengerCar6 = new PassengerCar();
-        passengerCar1.setCount(6);
-        passengerCar2.setCount(5);
-        passengerCar3.setCount(7);
-        passengerCar4.setCount(4);
-        passengerCar5.setCount(8);
-        passengerCar6.setCount(3);
-
-        CarTree<PassengerCar> carTree = new CarTree<>(passengerCar1);
-        carTree.addElement(null, passengerCar2);
-        carTree.addElement(null, passengerCar3);
-        carTree.addElement(null, passengerCar4);
-        carTree.addElement(null, passengerCar5);
-        carTree.addElement(null, passengerCar6);
-        carTree.print(carTree.getRoot());
-
-        System.out.println(carTree.sumCarCount(carTree.getRoot()));
-
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("count", 35);
-        map.put("color", Color.BLACK);
-        map.put("type", CarType.CAR);
-        map.put("passengerCount", 43);
+    public static void main(String[] args) throws IOException {
         CarService carService = CarService.getInstance();
-
-        Car car = carService.mapToObject.apply(map);
-        System.out.println(car);
-
-
+        System.out.println(carService.xmlToObject());
+        System.out.println(carService.jsonToObject());
     }
 }
 
