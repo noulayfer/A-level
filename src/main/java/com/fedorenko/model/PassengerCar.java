@@ -27,6 +27,6 @@ public class PassengerCar extends Car {
 
     @Override
     public String toString() {
-        return super.toString() + " " + passengerCount;
+        return super.toString() + " " + passengerCount + " " + getCount();
     }
 }

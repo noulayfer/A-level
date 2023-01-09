@@ -1,5 +1,6 @@
 package com.fedorenko.model;
 
+import com.fedorenko.service.CarService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public abstract class Car implements CountRestore {
+
+    private static final CarService CAR_SERVICE = CarService.getInstance();
     private Color  color;
     private final String id;
 
@@ -19,9 +22,13 @@ public abstract class Car implements CountRestore {
 
     private CarType type;
 
+    private String manufacturer;
+
     public Car(CarType type) {
         this.id = UUID.randomUUID().toString();
         this.type = type;
+        this.manufacturer = CAR_SERVICE.randomString();
+        this.engine = new Engine();
     }
 
     public Car(Color color, CarType type) {
@@ -29,6 +36,8 @@ public abstract class Car implements CountRestore {
         this.color = color;
         this.id = UUID.randomUUID().toString();
         this.type = type;
+        this.manufacturer = CAR_SERVICE.randomString();
+        this.engine = new Engine();
     }
     public Car(Color color, Engine engine, CarType type) {
         count = 1;
@@ -36,6 +45,8 @@ public abstract class Car implements CountRestore {
         this.engine = engine;
         this.id = UUID.randomUUID().toString();
         this.type = type;
+        this.manufacturer = CAR_SERVICE.randomString();
+        this.engine = new Engine();
     }
     @Override
     public String toString() {
