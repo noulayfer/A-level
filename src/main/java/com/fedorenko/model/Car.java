@@ -12,9 +12,11 @@ import java.util.UUID;
 @Setter
 public abstract class Car implements CountRestore {
 
+    private static final Random RANDOM = new Random();
+
     private static final CarService CAR_SERVICE = CarService.getInstance();
     private Color  color;
-    private final String id;
+    private String id;
 
     private Engine engine;
 
@@ -24,11 +26,14 @@ public abstract class Car implements CountRestore {
 
     private String manufacturer;
 
+    private int price;
+
     public Car(CarType type) {
         this.id = UUID.randomUUID().toString();
         this.type = type;
         this.manufacturer = CAR_SERVICE.randomString();
         this.engine = new Engine();
+        this.price = RANDOM.nextInt(5000);
     }
 
     public Car(Color color, CarType type) {
@@ -38,6 +43,7 @@ public abstract class Car implements CountRestore {
         this.type = type;
         this.manufacturer = CAR_SERVICE.randomString();
         this.engine = new Engine();
+        this.price = RANDOM.nextInt(5000);
     }
     public Car(Color color, Engine engine, CarType type) {
         count = 1;
@@ -47,7 +53,9 @@ public abstract class Car implements CountRestore {
         this.type = type;
         this.manufacturer = CAR_SERVICE.randomString();
         this.engine = new Engine();
+        this.price = RANDOM.nextInt(5000);
     }
+
     @Override
     public String toString() {
        return String.format("[%s], %s", getId(), getColor());

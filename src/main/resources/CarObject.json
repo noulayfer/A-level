@@ -1,0 +1,15 @@
+{
+  "car": {
+    "manufacturer": "someString",
+    "engine": {
+      "Engine": ""
+    },
+    "color": {
+      "Color": "BLACK"
+    },
+    "count": "45",
+    "price": "2000",
+    "id": "14124",
+    "passengerCount": "3"
+  }
+}

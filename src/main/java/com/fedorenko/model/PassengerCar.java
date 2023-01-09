@@ -1,5 +1,8 @@
 package com.fedorenko.model;
 
+import lombok.Setter;
+
+@Setter
 public class PassengerCar extends Car {
     private int passengerCount;
 

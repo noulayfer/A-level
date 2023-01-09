@@ -3,14 +3,15 @@ package com.fedorenko.service;
 import com.fedorenko.model.*;
 import com.fedorenko.repository.CarArrayRepository;
 import com.fedorenko.util.RandomGenerator;
-import lombok.Getter;
 
-import javax.print.attribute.standard.PrinterMoreInfoManufacturer;
-import javax.sound.midi.Track;
-import java.io.ObjectStreamException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.fedorenko.model.CarType.*;
@@ -32,6 +33,7 @@ public class CarService {
         }
         return carService;
     }
+
     public static CarService getInstance(final CarArrayRepository repository) {
         if (carService == null) {
             carService = new CarService(repository);
@@ -125,7 +127,7 @@ public class CarService {
 
     public void printManufacturerAndCount(final Car car) {
         Optional.ofNullable(car)
-        .ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
+                .ifPresent(x -> System.out.println(x.getCount() + " " + x.getType()));
     }
 
     public void printColor(final Car car) {
@@ -151,15 +153,15 @@ public class CarService {
                 () -> System.out.println(getRandomTypeCar()));
     }
 
-    public Map<String, Integer> mappingManufacturerAndCount() {
-       final Map<String, Integer> map  = Arrays.stream(getAll())
+    public Map<String, Integer> mappingManufacturerAndCount(final List<? extends Car> cars) {
+        final Map<String, Integer> map = cars.stream()
                 .collect(Collectors.toMap(Car::getManufacturer, Car::getCount,
                         (x, someElement) -> x));
         return map;
     }
 
-    public Map<Integer, List<Car>> mappingPowerToCarList() {
-        final List<Engine> list = Arrays.stream(getAll()).map(Car::getEngine).collect(Collectors.toList());
+    public Map<Integer, List<Car>> mappingPowerToCarList(final List<? extends Car> cars) {
+        final List<Engine> list = cars.stream().map(Car::getEngine).collect(Collectors.toList());
         Map<Integer, List<Car>> map = new HashMap<>();
         for (Engine engine : list) {
             List<Car> carWithSameEngine = Arrays.stream(getAll())
@@ -218,6 +220,167 @@ public class CarService {
         final Car[] all = carArrayRepository.getAll();
         System.out.println(Arrays.toString(all));
         System.out.println();
+    }
+
+    public void findManufacturerByPrice(final List<? extends Car> cars, int price) {
+        List<String> strings = cars.stream().filter(x -> x.getPrice() > price)
+                .map(Car::getManufacturer).collect(Collectors.toList());
+    }
+
+    public int countSum(final List<? extends Car> cars) {
+        int sum = cars.stream().map(Car::getPrice)
+                .reduce(0, Integer::sum);
+        return sum;
+    }
+
+    public Map<String, CarType> mapToMap(final List<? extends Car> cars) {
+        LinkedHashMap<String, CarType> map = cars.stream()
+                .sorted(Comparator.comparing(Car::getManufacturer))
+                .distinct()
+                .collect(Collectors.toMap(Car::getId, Car::getType, (x, y) -> y, LinkedHashMap::new));
+        return map;
+    }
+
+    public DoubleSummaryStatistics statistic(final List<? extends Car> cars) {
+        DoubleSummaryStatistics doubleSummaryStatistics = cars.stream()
+                .collect(Collectors.summarizingDouble(Car::getPrice));
+        return doubleSummaryStatistics;
+    }
+
+    public boolean priceCheck(final List<? extends Car> cars, int price) {
+        boolean isAllMatch = cars.stream().allMatch(x -> x.getPrice() > price);
+        return isAllMatch;
+    }
+
+    public Function<Map<String, Object>, Car> mapToObject = map -> {
+        CarType type = (CarType) map.getOrDefault("type", CAR);
+        if (type == CAR) {
+            return createPassengerCar(map);
+        } else {
+            return createTruck(map);
+        }
+    };
+
+    public Car xmlToObject() throws IOException {
+        Map<String, Object> hashMap;
+        String data = readFromFile("CarObject.xml");
+        hashMap = dataToMapXML(data);
+        return mapToObject.apply(hashMap);
+    }
+
+    public Car jsonToObject() throws IOException {
+        Map<String, Object> hashMap;
+        String data = readFromFile("CarObject.json");
+        hashMap = dataToMapJson(data);
+        return mapToObject.apply(hashMap);
+    }
+
+    private String readFromFile(final String fileName) throws IOException {
+        final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        String str = "";
+        try (final InputStream resourceAsStream = contextClassLoader.getResourceAsStream(fileName);
+             BufferedReader bf = new BufferedReader(new InputStreamReader(resourceAsStream));) {
+            String strAppend;
+            while ((strAppend = bf.readLine()) != null) {
+                str += strAppend + "\n";
+            }
+        }
+        return str;
+    }
+
+    private Map<String, Object> dataToMapJson(final String data) {
+        Map<String, Object> map = new HashMap<>();
+        Pattern pattern = Pattern.compile("(.*?): (.*)[^ {][,\\n]");
+        Matcher matcher = pattern.matcher(data);
+        String result = "";
+        while (matcher.find()) {
+            result += matcher.group();
+        }
+        result = result.replaceAll("[, \"]", "").trim();
+        String[] strings = result.split("\n");
+        for (String s : strings) {
+            List<String> tempList = Arrays.stream(s.split(":")).toList();
+            if (tempList.size() == 1) {
+                map.put(tempList.get(0).toLowerCase(), null);
+            } else {
+                map.put(tempList.get(0).toLowerCase(), tempList.get(1));
+            }
+        }
+        return map;
+    }
+
+    private Map<String, Object> dataToMapXML(final String data) {
+        Map<String, Object> map = new HashMap<>();
+        Pattern pattern = Pattern.compile("<(.*?)>(.*)</?");
+        Matcher matcher = pattern.matcher(data);
+        String result = "";
+        while (matcher.find()) {
+            result += matcher.group();
+        }
+        result = result.replaceAll("[</]", " ").trim();
+        for (String s : result.split(" ")) {
+            if (s.length() == 0) {
+                continue;
+            }
+            final List<String> list = Arrays.stream(s.split(">")).toList();
+            if (list.size() == 1) {
+                map.put(list.get(0).toLowerCase(), null);
+            } else {
+                map.put(list.get(0).toLowerCase(), list.get(1));
+            }
+        }
+        return map;
+    }
+
+    private PassengerCar createPassengerCar(final Map<String, Object> map) {
+        final PassengerCar passengerCar = (PassengerCar) createAbstractCar(CAR, map);
+        final int passengerCount = (int) map.getOrDefault("passengerCount", 1);
+        passengerCar.setPassengerCount(passengerCount);
+        return passengerCar;
+    }
+
+    private Truck createTruck(final Map<String, Object> map) {
+        final Truck truck = (Truck) createAbstractCar(TRUCK, map);
+        final int loadCapacity = (int) map.getOrDefault("loadCapacity", 10);
+        truck.setLoadCapacity(loadCapacity);
+        return truck;
+    }
+
+    private Car createAbstractCar(final CarType type, final Map<String, Object> map) {
+        final Car car;
+        if (type == CAR) {
+            car = new PassengerCar();
+        } else {
+            car = new Truck();
+        }
+        setFields(car, map);
+        return car;
+    }
+
+    private Car setFields(final Car car, final Map<String, Object> map) {
+        final String count = String.valueOf(map.getOrDefault("count", 10));
+        car.setCount(Integer.parseInt(count));
+        final String color = String.valueOf(map.getOrDefault("color", Color.BLACK));
+        car.setColor(Color.valueOf(color));
+        final String price = String.valueOf(map.getOrDefault("price", 2000));
+        car.setPrice(Integer.parseInt(price));
+        final Engine engine = (Engine) map.getOrDefault("engine", new Engine());
+        car.setEngine(engine);
+        final String manufacturer = (String) map.getOrDefault("manufacturer", "unknown");
+        car.setManufacturer(manufacturer);
+        final String id = (String) map.getOrDefault("id", "unknown");
+        car.setId(id);
+        return car;
+    }
+
+
+    public Map<Color, Integer> innerList(final List<List<Car>> cars) {
+        Map<Color, Integer> map = cars.stream().flatMap(List::stream)
+                .sorted(Comparator.comparing(Car::getColor))
+                .peek(System.out::println)
+                .filter(x -> x.getPrice() > 2500)
+                .collect(Collectors.toMap(Car::getColor, Car::getCount));
+        return map;
     }
 
     private Color getRandomColor() {

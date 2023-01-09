@@ -1,0 +1,13 @@
+<car>
+    <manufacturer>"someString"</manufacturer>
+    <engine>
+        <Engine></Engine>
+    </engine>
+    <color>
+        <Color>BLACK</Color>
+    </color>
+    <count>45</count>
+    <price>2000</price>
+    <id>14124</id>
+    <passengerCount>3</passengerCount>
+</car>
