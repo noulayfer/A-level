@@ -4,6 +4,9 @@ package com.fedorenko.repository;
 import com.fedorenko.model.Car;
 import com.fedorenko.model.Color;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CarArrayRepository implements RepositoryInterface<Car> {
     //    CRUD
 //    Create (Save, Insert)
@@ -36,14 +39,14 @@ public class CarArrayRepository implements RepositoryInterface<Car> {
         }
     }
     @Override
-    public Car[] getAll() {
+    public List<Car> getAll() {
         int newLength = foundLength();
         if (newLength == 0) {
             return null;
         }
         Car[] newArr = new Car[newLength];
         System.arraycopy(cars, 0, newArr, 0, newLength);
-        return newArr;
+        return Arrays.stream(newArr).toList();
     }
     @Override
     public Car getById(final String id) {

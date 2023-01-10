@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 //initialize
@@ -96,7 +98,7 @@ class CarServiceTest {
     @Test
     void getAll_not_null() {
         final Car[] cars = {new PassengerCar(), new PassengerCar()};
-        Mockito.when(repository.getAll()).thenReturn(cars);
+        Mockito.when(repository.getAll()).thenReturn(List.of(cars));
         Assertions.assertNotNull(target.getAll());
     }
 
@@ -115,7 +117,7 @@ class CarServiceTest {
 
     @Test
     void find_not_null() {
-        Mockito.when(repository.getById("random")).thenReturn(new Truck());
+        Mockito.when(repository.getById("random")).thenReturn(new PassengerCar());
         Assertions.assertNotNull(target.find("random"));
     }
 

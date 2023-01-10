@@ -1,7 +1,9 @@
 <car>
     <manufacturer>"someString"</manufacturer>
     <engine>
-        <Engine></Engine>
+        <Engine>
+
+        </Engine>
     </engine>
     <color>
         <Color>BLACK</Color>

@@ -88,7 +88,7 @@ public class CarService {
         if (carArrayRepository.getAll() == null) {
             return new Car[0];
         }
-        return carArrayRepository.getAll();
+        return carArrayRepository.getAll().toArray(new Car[0]);
     }
 
     public Car find(final String id) {
@@ -156,19 +156,12 @@ public class CarService {
     public Map<String, Integer> mappingManufacturerAndCount(final List<? extends Car> cars) {
         final Map<String, Integer> map = cars.stream()
                 .collect(Collectors.toMap(Car::getManufacturer, Car::getCount,
-                        (x, someElement) -> x));
+                        (x, someElement) -> x + someElement));
         return map;
     }
 
     public Map<Integer, List<Car>> mappingPowerToCarList(final List<? extends Car> cars) {
-        final List<Engine> list = cars.stream().map(Car::getEngine).collect(Collectors.toList());
-        Map<Integer, List<Car>> map = new HashMap<>();
-        for (Engine engine : list) {
-            List<Car> carWithSameEngine = Arrays.stream(getAll())
-                    .filter(x -> x.getEngine().equals(engine)).collect(Collectors.toList());
-            map.put(engine.getPower(), carWithSameEngine);
-        }
-        return map;
+        return cars.stream().collect(Collectors.groupingBy(car -> car.getEngine().getPower()));
     }
 
     private Car getRandomTypeCar() {
@@ -217,8 +210,7 @@ public class CarService {
     }
 
     public void printAll() {
-        final Car[] all = carArrayRepository.getAll();
-        System.out.println(Arrays.toString(all));
+        System.out.println(carArrayRepository.getAll());
         System.out.println();
     }
 

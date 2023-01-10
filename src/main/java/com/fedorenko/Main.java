@@ -16,8 +16,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         CarService carService = CarService.getInstance();
-        System.out.println(carService.xmlToObject());
-        System.out.println(carService.jsonToObject());
+//        System.out.println(carService.xmlToObject());
+//        System.out.println(carService.jsonToObject());
+
+        carService.create(5);
+        System.out.println(carService.mappingPowerToCarList(List.of(carService.getAll())));
     }
 }
 
