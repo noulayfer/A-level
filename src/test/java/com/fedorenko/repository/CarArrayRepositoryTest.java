@@ -26,7 +26,7 @@ class CarArrayRepositoryTest {
     @Test
     void save_with_positive_car() {
         target.save(car);
-        Assertions.assertEquals(car, target.getAll()[0]);
+        Assertions.assertEquals(car, target.getAll().get(0));
     }
 
     @Test
@@ -52,7 +52,7 @@ class CarArrayRepositoryTest {
     void getAll_with_positive() {
         Car car1 = new PassengerCar();
         target.save(car1);
-        Car car2 = target.getAll()[0];
+        Car car2 = target.getAll().get(0);
         Assertions.assertEquals(car1, car2);
     }
 
@@ -106,7 +106,7 @@ class CarArrayRepositoryTest {
         Car car1 = new PassengerCar();
         target.insert(8, car1);
         int expectedPosition = 1;
-        Assertions.assertEquals(car1, target.getAll()[expectedPosition]);
+        Assertions.assertEquals(car1, target.getAll().get(expectedPosition));
     }
 
     @Test
@@ -121,7 +121,7 @@ class CarArrayRepositoryTest {
     @Test
     void updateColor_with_positive() {
         target.save(car);
-        target.getAll()[0].setColor(Color.BLACK);
+        target.getAll().get(0).setColor(Color.BLACK);
         target.updateColor(car.getId(), Color.RED);
         Assertions.assertEquals(Color.RED, car.getColor());
     }
